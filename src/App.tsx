@@ -1,4 +1,4 @@
-import { CalculatorProvider } from './context/calculator-context';
+import { CalculatorProvider } from './context/calculator-provider';
 import Calculator from './components/calculator';
 import OperationHistory from './components/operation-history';
 
