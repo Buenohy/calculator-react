@@ -7,7 +7,7 @@ const textVariants = tv({
     variant: {
       default: 'text-xl',
       muted: 'text-xl text-(--text-secondary)',
-      heding: 'text-2xl',
+      heading: 'text-2xl',
       blast: 'text-3xl',
     },
   },
