@@ -1,8 +1,9 @@
-import React from 'react';
+import { ElementType, forwardRef, ReactNode } from 'react';
 import { tv, type VariantProps } from 'tailwind-variants';
+import { cn } from '../utils/cn'; // utilitário de merge de classes
 
 const textVariants = tv({
-  base: 'text-white',
+  base: '',
   variants: {
     variant: {
       default: 'text-xl',
@@ -11,27 +12,42 @@ const textVariants = tv({
       blast: 'text-3xl',
     },
   },
+  defaultVariants: {
+    variant: 'default',
+  },
 });
 
-interface TextProps extends VariantProps<typeof textVariants> {
-  as?: keyof React.JSX.IntrinsicElements;
+type TextOwnProps<T extends ElementType = 'span'> = {
+  as?: T;
+  children: ReactNode;
   className?: string;
-  children?: React.ReactNode;
-}
+} & VariantProps<typeof textVariants>;
 
-export default function Text({
-  as = 'span',
-  variant = 'default',
-  className,
-  children,
-  ...props
-}: TextProps) {
-  return React.createElement(
-    as,
+type TextProps<T extends ElementType> = TextOwnProps<T> &
+  Omit<React.ComponentPropsWithoutRef<T>, keyof TextOwnProps<T>>;
+
+const Text = forwardRef(
+  <T extends ElementType = 'span'>(
     {
-      className: textVariants({ variant, className }),
-      ...props,
-    },
-    children,
-  );
-}
+      as: Component = 'span',
+      variant,
+      className,
+      children,
+      ...props
+    }: TextProps<T>,
+    ref: React.ForwardedRef<any>,
+  ) => {
+    return (
+      <Component
+        ref={ref}
+        className={cn(textVariants({ variant }), className)}
+        {...props}
+      >
+        {children}
+      </Component>
+    );
+  },
+);
+
+Text.displayName = 'Text';
+export default Text;
